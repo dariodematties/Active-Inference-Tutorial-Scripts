@@ -1,5 +1,11 @@
 # Active-Inference-Tutorial-Scripts
 
+This is the original repository from the paper "A step-by-step tutorial on active inference and its application to empirical data".
+
+I am just re-making the exercises in python.
+
+Below this line you will have the original README file from the authors.
+
 Supplementary scripts for Step-by-step active inference modelling tutorial
 
 By Ryan Smith and Christopher Whyte
