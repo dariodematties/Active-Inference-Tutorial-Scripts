@@ -63,7 +63,7 @@ for t in range(T):
             # using the posterior computed in step 6B
             if tau == 0: # First time point
                 lnD = ln(D) # past Message 1
-                lnBs = ln(np.matmul(B, Qs[:, tau+1])) # future Message 2
+                lnBs = ln(np.matmul(B.T, Qs[:, tau+1])) # future Message 2
             elif tau == T-1: # Last time point
                 lnBs = ln(np.matmul(B, Qs[:, tau-1])) # no contribution from future,
                                                       # ( only Message 1 )
@@ -101,11 +101,13 @@ time_tau = np.array([[0, 1, 0, 1], [0, 0, 1, 1]])
 
 firing_rate = np.zeros((num_iter, num_states, num_epochs*num_epochs)) # Firing rates
 ERP = np.zeros((num_iter, num_states, num_epochs*num_epochs)) # Evoked response potentials
+errors = np.zeros((num_iter, num_states, num_epochs*num_epochs)) # Prediction errors
 for t_tau in range(time_tau.shape[1]):
     for epoch in range(num_epochs):
         # firing rate
         firing_rate[:, epoch, t_tau] = xn[:, time_tau[0, t_tau], time_tau[1, t_tau], epoch]
         ERP[:, epoch, t_tau] = np.gradient(firing_rate[:, epoch, t_tau])
+        errors[:, epoch, t_tau] = epsilon[time_tau[0, t_tau], :, epoch, time_tau[1, t_tau]]
 
 
 firing_rate = firing_rate.transpose((2, 1, 0))
@@ -161,7 +163,25 @@ ax[1,1].set_ylabel(f'Firing rate')
 ax[1,1].set_title('ERPs (t_tau 2 and 3)')
 ax[1,1].legend()
 plt.tight_layout()
+plt.show(block=False)
+
+# Plot the prediction errors evolution
+errors = errors.transpose((2, 1, 0))
+errors = errors.reshape((-1, num_iter*num_states))
+fig, ax = plt.subplots(1, 2, figsize=(10, 5))
+domine = [i for i in range(errors[0, :].shape[-1])]
+ax[0].plot(domine, errors[0, :], 'x-',
+                     errors[1, :], 'o-', label='t tau 0 0 and 0 1')
+ax[0].set_xlabel('Message passing iteration')
+ax[0].set_ylabel(f'Prediction error')
+ax[0].set_title('Prediction errors (t_tau 0 and 1)')
+ax[0].legend()
+ax[1].plot(domine, errors[2, :], 'x-',
+                   errors[3, :], 'o-', label='t tau 1 0 and 1 1')
+ax[1].set_xlabel('Message passing iteration')
+ax[1].set_ylabel(f'Prediction error')
+ax[1].set_title('Prediction errors (t_tau 2 and 3)')
+ax[1].legend()
+plt.tight_layout()
 plt.show()
-
-
-
+# end of script

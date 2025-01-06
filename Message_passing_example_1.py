@@ -96,7 +96,7 @@ for ni in range(num_iter):# Repeat until convergence/fixed number of iterations 
             lnD = ln(D)                         # Message 1
             lnBs = ln(np.matmul(B, Qs[:, V+1])) # Message 2
         elif V == T-1:  # Last time point
-            lnBs = ln(np.matmul(B, Qs[:, V-1])) # Message 1
+            lnBs = ln(np.matmul(B.T, Qs[:, V-1])) # Message 1
 
         # Likelihood of the observation given the state
         lnAo = ln(np.matmul(A, o[:, V]))
