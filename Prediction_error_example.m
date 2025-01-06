@@ -116,3 +116,18 @@ disp(' ');
 disp('Ambiguity Under Policy 2:');
 disp(ambiguity_2);
 disp(' ');
+
+
+
+%% functions
+
+% natural log that replaces zero values with very small values for numerical reasons.
+function y = nat_log(x)
+y = log(x+exp(-16));
+end 
+
+
+% softmax function
+function y = spm_softmax(x)
+y = exp(x)./sum(exp(x));
+end
